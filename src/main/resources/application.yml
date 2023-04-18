@@ -1,0 +1,38 @@
+# Spring config here
+server:
+  port: 0
+
+spring:
+  jackson:
+    default-property-inclusion: non_empty
+    deserialization:
+      fail-on-unknown-properties: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    streams:
+      application-id: spring-kafka-simple-0
+      state-dir: /tmp/data/kafka-stream
+      properties:
+        default.production.exception.handler: org.apache.kafka.streams.errors.DefaultProductionExceptionHandler
+        default.deserialization.exception.handler: fr.daart.springkafkasimple.kafka.PushToDLQExceptionHandler
+        deserialization.exception.handler.dlq.topic: ${our-kafka-config.dlq}
+#        schema:
+#          registry:
+#            url: http://localhost:8081
+
+
+# Our properties here
+our-kafka-config:
+  dlq: "our-dlq"
+  in:
+    item-a: "item-a"
+    item-b: "item-b"
+  out:
+    item-c: "item-c"
+  store:
+    item-a: "item-a-store"
+    item-b: "item-b-store"
+    item-c: "item-c-store"
